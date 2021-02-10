@@ -1,2 +1,2 @@
-# mobile-development-exam
+# Mobile-development-exam
 We're doomed.
