@@ -1,6 +1,8 @@
 # Mobile-development-exam
 We're doomed.
 
+[Lien du Google Docs](https://docs.google.com/document/d/1bcErvyDaFoerLLl4x8c2meqxUsnyEXqZizmsrGIn1bI/edit#)
+
 ## Spécifications
 L'application se compose de plusieurs parties:
 - Un écran d'acceuil
