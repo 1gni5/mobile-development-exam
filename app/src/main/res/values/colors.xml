@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-
+    <!-- App color scheme. -->
     <color name="dark_blue_grey">#5c6784</color>
     <color name="oxford_blue">#1d263b</color>
     <color name="middle_blue_green">#a0eade</color>
@@ -13,6 +8,19 @@
     <color name="ao_english">#157f1f</color>
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
+
+    <!-- Game's colors -->
+    <color name="game_color_01">#F44336</color>
+    <color name="game_color_02">#E91E63</color>
+    <color name="game_color_03">#9C27B0</color>
+    <color name="game_color_04">#03A9F4</color>
+    <color name="game_color_05">#00BCD4</color>
+    <color name="game_color_06">#009688</color>
+    <color name="game_color_07">#4CAF50</color>
+    <color name="game_color_08">#FFEB3B</color>
+    <color name="game_color_09">#FF9800</color>
+    <color name="game_color_10">#FF5722</color>
+
 </resources>
 
     <!-- Colorscheme generated using : https://coolors.co/157f1f-4cb963-a0eade-5c6784-1d263b -->
