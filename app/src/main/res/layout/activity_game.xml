@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Game">
 
+    <!-- HUG Guideline -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/HUDGuideline"
         android:layout_width="wrap_content"
@@ -14,6 +15,7 @@
         app:layout_constraintGuide_percent="0.10"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- All game's Buttons -->
     <Button
         android:id="@+id/gameButton1"
         android:layout_width="0dp"
@@ -85,6 +87,14 @@
         app:layout_constraintStart_toEndOf="@+id/gameButton4"
         app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
 
+    <!-- Middle split Guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/middleSplitGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
     <Button
         android:id="@+id/gameButton6"
         android:layout_width="0dp"
@@ -155,11 +165,84 @@
         app:layout_constraintStart_toEndOf="@+id/gameButton9"
         app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/middleSplitGuideline"
+    <!-- Score TextView -->
+    <TextView
+        android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        android:layout_marginStart="16dp"
+        android:text="@string/score_template"
+        app:layout_constraintBottom_toTopOf="@+id/HUDGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/levelTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Level TextView -->
+    <TextView
+        android:id="@+id/levelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/level_template"
+        app:layout_constraintBottom_toTopOf="@+id/HUDGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/lifeFlow"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/scoreTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Life Flow -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/lifeFlow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:constraint_referenced_ids="lifeImageView1, lifeImageView2, lifeImageView3"
+        app:flow_horizontalAlign="center"
+        app:flow_horizontalGap="4dp"
+        app:flow_verticalAlign="center"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintBottom_toTopOf="@+id/HUDGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/levelTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- All hearts -->
+    <ImageView
+        android:id="@+id/lifeImageView1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/life_sprite_description"
+        app:layout_constraintBottom_toBottomOf="@+id/lifeFlow"
+        app:layout_constraintEnd_toStartOf="@+id/lifeImageView2"
+        app:layout_constraintStart_toStartOf="@+id/lifeFlow"
+        app:layout_constraintTop_toTopOf="@+id/lifeFlow"
+        app:srcCompat="@drawable/heart" />
+
+    <ImageView
+        android:id="@+id/lifeImageView2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/life_sprite_description"
+        app:layout_constraintBottom_toBottomOf="@+id/lifeFlow"
+        app:layout_constraintEnd_toStartOf="@+id/lifeImageView3"
+        app:layout_constraintStart_toEndOf="@+id/lifeImageView1"
+        app:layout_constraintTop_toTopOf="@+id/lifeFlow"
+        app:srcCompat="@drawable/heart" />
+
+    <ImageView
+        android:id="@+id/lifeImageView3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/life_sprite_description"
+        app:layout_constraintBottom_toBottomOf="@+id/lifeFlow"
+        app:layout_constraintEnd_toEndOf="@+id/lifeFlow"
+        app:layout_constraintStart_toEndOf="@+id/lifeImageView2"
+        app:layout_constraintTop_toTopOf="@+id/lifeFlow"
+        app:srcCompat="@drawable/heart" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
