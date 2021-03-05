@@ -6,4 +6,160 @@
     android:layout_height="match_parent"
     tools:context=".Game">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/HUDGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/gameButton1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/game_color_01"
+        app:layout_constraintBottom_toTopOf="@+id/gameButton6"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
+
+    <Button
+        android:id="@+id/gameButton2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/game_color_02"
+        app:layout_constraintBottom_toTopOf="@+id/middleSplitGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton1"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
+
+    <Button
+        android:id="@+id/gameButton3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/game_color_03"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/gameButton8"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton2"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
+
+    <Button
+        android:id="@+id/gameButton4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/game_color_04"
+        app:layout_constraintBottom_toTopOf="@+id/middleSplitGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton3"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
+
+    <Button
+        android:id="@+id/gameButton5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/game_color_05"
+        app:layout_constraintBottom_toTopOf="@+id/middleSplitGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton4"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline" />
+
+    <Button
+        android:id="@+id/gameButton6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/game_color_06"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
+
+    <Button
+        android:id="@+id/gameButton7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/game_color_07"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton6"
+        app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
+
+    <Button
+        android:id="@+id/gameButton8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/game_color_08"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton7"
+        app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
+
+    <Button
+        android:id="@+id/gameButton9"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/game_color_09"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gameButton10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton8"
+        app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
+
+    <Button
+        android:id="@+id/gameButton10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/game_color_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/gameButton9"
+        app:layout_constraintTop_toTopOf="@+id/middleSplitGuideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/middleSplitGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
