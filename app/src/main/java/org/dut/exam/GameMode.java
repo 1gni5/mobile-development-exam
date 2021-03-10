@@ -1,4 +1,8 @@
 package org.dut.exam;
 
-public enum Difficulty {
+public enum GameMode {
+    EASY,
+    HARD,
+    EXPERT,
+    TIMED
 }
