@@ -21,7 +21,8 @@ public class Game extends AppCompatActivity {
     public static final byte MAXIMUM_LEVEL = 7;
     public static final byte DEFAULT_BUTTONS_NUMBER = 3;
 
-    private ArrayList<Button> allGameButtons = new ArrayList<Button>(NUMBER_OF_BUTTONS);
+    private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
+    private ArrayList<Button> activeGameButtons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +37,32 @@ public class Game extends AppCompatActivity {
 
             allGameButtons.add((Button)findViewById(buttonId));
         }
+    }
+
+    /**
+     * Génère la liste des boutons actifs en tirant aléatoirement des boutons parmi la liste de tout
+     * les boutons du jeu.
+     * @param numberOfButtons Le nombre de boutons à tirer.
+     */
+    protected void generatesActiveGameButtons(int numberOfButtons) {
+
+        // Copie la liste des boutons disponible
+        ArrayList<Button> availableGameButtons = (ArrayList<Button>) this.allGameButtons.clone();
+
+        // Prépare le générateur aléatoire
+        Random randomGenerator = new Random();
+
+        // Tire numberOfButtons boutons de manière aléatoire
+        for(int i = 0; i < numberOfButtons; i++) {
+            int index = randomGenerator.nextInt(availableGameButtons.size());
+            this.activeGameButtons.add(availableGameButtons.remove(index));
+        }
+    }
+
+    public void gameStart(View view) {
+        // Cache le bouton "Play"
+        findViewById(R.id.playFloatingActionButton).setVisibility(View.INVISIBLE);
+
+        // Génére la liste des boutons actifs
     }
 }
