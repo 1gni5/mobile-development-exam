@@ -30,7 +30,9 @@ public class Game extends AppCompatActivity {
 
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
     private ArrayList<Button> activeGameButtons = new ArrayList<>();
+
     private ArrayList<Button> currentSequence = new ArrayList<>();
+    private ArrayList<Button> playerSequence = new ArrayList<>();
 
     private FloatingActionButton playButton;
 
@@ -75,6 +77,12 @@ public class Game extends AppCompatActivity {
         animateGameSequence(0, false);
     }
 
+    /**
+     * Anime la séquence actuelle en s'appellant jusqu'à avoir parcouru tout les boutons de la
+     * séquence. Pour chaque bouton la méthode est utilisé 2 fois (sens normal puis inverse).
+     * @param index Indice de départ de l'animation, surtout utilisé pour l'appel récursif.
+     * @param reverseCall Si vrai inverse le sens de l'animation, surtout utilisé pour l'appel récursif.
+     */
     private void animateGameSequence(int index, boolean reverseCall) {
 
         // Récupère le bouton à animer
@@ -139,6 +147,24 @@ public class Game extends AppCompatActivity {
         for(int i = 0; i < numberOfButtons; i++) {
             int index = randomGenerator.nextInt(availableGameButtons.size());
             this.activeGameButtons.add(availableGameButtons.remove(index));
+        }
+    }
+
+    public void onGameButtonClick(View view) {
+        // Récupère le bouton cliqué
+        Button button = findViewById(view.getId());
+
+        if(playerSequence.size() + 1 < currentSequence.size()) {
+            // Ajoute le bouton à la séquence du joueur
+            playerSequence.add(button);
+        } else {
+            boolean sequenceIsGood = true;
+
+            for(int index = 0; index < playerSequence.size(); index++) {
+                sequenceIsGood &= playerSequence.get(index).equals(currentSequence.get(index));
+            }
+
+            Toast.makeText(this, sequenceIsGood ? "You won !":"You loose !", Toast.LENGTH_SHORT).show();
         }
     }
 }
