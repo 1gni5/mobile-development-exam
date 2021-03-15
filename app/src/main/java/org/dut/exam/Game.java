@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ public class Game extends AppCompatActivity {
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
     private ArrayList<Button> activeGameButtons = new ArrayList<>();
 
+    private FloatingActionButton playButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +40,33 @@ public class Game extends AppCompatActivity {
             String identifier = "gameButton" + i;
             int buttonId = getResources().getIdentifier(identifier, "id", getPackageName());
 
-            allGameButtons.add((Button)findViewById(buttonId));
+            allGameButtons.add(findViewById(buttonId));
         }
+
+        // Active le listener du playButton
+        playButton = findViewById(R.id.playButton);
+        playButton.setOnClickListener(
+                (view)->{gameStart();}
+        );
+
+        // Si la liste des boutons actifs n'est pas remplit
+        if (activeGameButtons.size() == 0 ) {
+            generatesActiveGameButtons(DEFAULT_BUTTONS_NUMBER);
+        }
+
+        // Affiche les boutons actifs
+        for(Button button : activeGameButtons) {
+            button.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void gameStart() {
+        Toast.makeText(this, "Time to play!", Toast.LENGTH_SHORT).show();
+
+        // Cache le bouton
+        playButton.setVisibility(View.INVISIBLE);
+
+
     }
 
     /**
@@ -57,12 +87,5 @@ public class Game extends AppCompatActivity {
             int index = randomGenerator.nextInt(availableGameButtons.size());
             this.activeGameButtons.add(availableGameButtons.remove(index));
         }
-    }
-
-    public void gameStart(View view) {
-        // Cache le bouton "Play"
-        findViewById(R.id.playFloatingActionButton).setVisibility(View.INVISIBLE);
-
-        // Génére la liste des boutons actifs
     }
 }
