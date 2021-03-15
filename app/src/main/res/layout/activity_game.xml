@@ -253,5 +253,18 @@
         app:layout_constraintTop_toTopOf="@+id/lifeFlow"
         app:srcCompat="@drawable/heart" />
 
+    <!-- Play floating button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/play_button_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/HUDGuideline"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
