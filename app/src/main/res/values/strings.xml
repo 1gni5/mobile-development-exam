@@ -19,4 +19,5 @@
     <string name="score_template">Score:</string>
     <string name="level_template">Niveau:</string>
     <string name="life_sprite_description">Un coeur représentant la vie du joueur</string>
+    <string name="play_button_description">Bouton \"Jouer\"</string>
 </resources>
