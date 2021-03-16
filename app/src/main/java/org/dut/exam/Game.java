@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,7 +25,7 @@ public class Game extends AppCompatActivity {
 
     private byte currentLevel = 1;
     private GameMode gameMode = GameMode.EASY;
-
+    private byte playerScore;
     private int lifes;
 
 
@@ -37,6 +38,10 @@ public class Game extends AppCompatActivity {
     private ArrayList<ImageView> heartSprites = new ArrayList<>(NUMBER_OF_HEART);
 
     private FloatingActionButton playButton;
+    private TextView scoreTextView;
+    private  TextView levelTextView;
+
+
 
     Hashtable<GameMode, Integer> gameModeToHearts = new Hashtable<>();
 
@@ -53,6 +58,10 @@ public class Game extends AppCompatActivity {
         }
 
         lifes = gameModeToHearts.get(gameMode);
+
+        /* --- Initialise les scores et niveau -- */
+        playerScore = 0;
+        currentLevel = 0;
     }
 
     @Override
@@ -70,7 +79,7 @@ public class Game extends AppCompatActivity {
         }
 
         // Affiche tout les coeurs sur le layout
-        for(int i = 1; i <= lifes ; i++) {
+        for(int i = 1; i <= NUMBER_OF_HEART ; i++) {
             // Construit l'identifiant et récupère l'id
             String identifier = "lifeImageView" + i;
             int heartImageViewId = getResources().getIdentifier(identifier, "id", getPackageName());
@@ -78,9 +87,8 @@ public class Game extends AppCompatActivity {
             heartSprites.add(findViewById(heartImageViewId));
         }
 
-        for(ImageView heartSprite : heartSprites) {
-            heartSprite.setVisibility(View.VISIBLE);
-        }
+        // Affiche le bon nombre de coeurs
+        renderHearts();
 
         // Active le listener du playButton
         playButton = findViewById(R.id.playButton);
@@ -97,6 +105,14 @@ public class Game extends AppCompatActivity {
         for(Button button : activeGameButtons) {
             button.setVisibility(View.VISIBLE);
         }
+
+        // Affiche le score
+        scoreTextView = findViewById(R.id.scoreTextView);
+        scoreTextView.setText(String.format("%s %d", this.getString(R.string.score_template), playerScore));
+
+        // Affiche le niveau
+        levelTextView = findViewById(R.id.levelTextView);
+        levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), currentLevel));
     }
 
     private void gameStart() {
@@ -105,7 +121,7 @@ public class Game extends AppCompatActivity {
         // Cache le bouton
         playButton.setVisibility(View.INVISIBLE);
 
-        generateNewSequence(currentLevel + 3);
+        generateNewSequence(currentSequence.size() + 1);
         animateGameSequence(0, false);
     }
 
@@ -191,8 +207,52 @@ public class Game extends AppCompatActivity {
         }
     }
 
+    private void renderHearts(){
+        // Enlève tout les coeurs
+        for(ImageView heartSprite : heartSprites) {
+            heartSprite.setVisibility(View.GONE);
+        }
+
+        // Dessine les coeurs nécessaires
+        for(int index = 0; index < lifes; index++) {
+            heartSprites.get(index).setVisibility(View.VISIBLE);
+        }
+    }
+
     private void gameEnd(boolean victory) {
-        Toast.makeText(this, victory ? "You won !":"You loose !", Toast.LENGTH_SHORT).show();
+        // Reset les séquences du joueur et de l'ordinateur
+        playerSequence.clear();
+        currentSequence.clear();
+
+        if(victory) {
+            // Passe au niveau suivant
+            if(currentLevel + 1 > MAXIMUM_LEVEL) {
+                Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
+            } else {
+                currentLevel++;
+                levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), currentLevel));
+
+                // Affiche le bon nombre de coeurs
+                lifes = gameModeToHearts.get(gameMode);
+                renderHearts();
+            }
+            currentLevel++;
+            Toast.makeText(this,"You won !", Toast.LENGTH_SHORT).show();
+
+            // Nouvelle séquence
+            generateNewSequence(currentSequence.size() + 1);
+            animateGameSequence(0, false);
+        } else if(lifes > 0) {
+            // Nouvelle séquence
+            generateNewSequence(currentSequence.size());
+            animateGameSequence(0, false);
+
+            lifes--;
+            // Affiche le bon nombre de coeurs
+            renderHearts();
+        } else {
+            Toast.makeText(this,"You loose !", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onGameButtonClick(View view) {
@@ -203,13 +263,13 @@ public class Game extends AppCompatActivity {
         playerSequence.add(button);
 
         if(playerSequence.size() == currentSequence.size()) {
-            boolean sequenceIsGood = true;
+            boolean sequenceIsCorrect = true;
 
             for(int index = 0; index < playerSequence.size(); index++) {
-                sequenceIsGood &= playerSequence.get(index).equals(currentSequence.get(index));
+                sequenceIsCorrect &= playerSequence.get(index).equals(currentSequence.get(index));
             }
 
-            gameEnd(sequenceIsGood);
+            gameEnd(sequenceIsCorrect);
         }
     }
 }
