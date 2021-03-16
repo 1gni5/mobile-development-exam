@@ -25,6 +25,9 @@ public class Game extends AppCompatActivity {
     private byte currentLevel = 1;
     private GameMode gameMode = GameMode.EASY;
 
+    private int lifes;
+
+
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
     private ArrayList<Button> activeGameButtons = new ArrayList<>();
 
@@ -48,6 +51,8 @@ public class Game extends AppCompatActivity {
         for(int index = 0; index < numberOfHearts.length; index++) {
             gameModeToHearts.put(gameModes[index], numberOfHearts[index]);
         }
+
+        lifes = gameModeToHearts.get(gameMode);
     }
 
     @Override
@@ -65,7 +70,7 @@ public class Game extends AppCompatActivity {
         }
 
         // Affiche tout les coeurs sur le layout
-        for(int i = 1; i <= gameModeToHearts.get(gameMode); i++) {
+        for(int i = 1; i <= lifes ; i++) {
             // Construit l'identifiant et récupère l'id
             String identifier = "lifeImageView" + i;
             int heartImageViewId = getResources().getIdentifier(identifier, "id", getPackageName());
@@ -104,6 +109,12 @@ public class Game extends AppCompatActivity {
         animateGameSequence(0, false);
     }
 
+    protected void unlockActiveButtons() {
+        for(Button button : activeGameButtons) {
+            button.setEnabled(true);
+        }
+    }
+
     /**
      * Anime la séquence actuelle en s'appellant jusqu'à avoir parcouru tout les boutons de la
      * séquence. Pour chaque bouton la méthode est utilisé 2 fois (sens normal puis inverse).
@@ -137,6 +148,9 @@ public class Game extends AppCompatActivity {
                             précédente et on peux donc passer au prochain élément.
                              */
                             animateGameSequence(index + 1, false);
+                        } else {
+                            // Unlock buttons
+                            unlockActiveButtons();
                         }
                     }
                 });
@@ -177,21 +191,25 @@ public class Game extends AppCompatActivity {
         }
     }
 
+    private void gameEnd(boolean victory) {
+        Toast.makeText(this, victory ? "You won !":"You loose !", Toast.LENGTH_SHORT).show();
+    }
+
     public void onGameButtonClick(View view) {
         // Récupère le bouton cliqué
         Button button = findViewById(view.getId());
 
-        if(playerSequence.size() + 1 < currentSequence.size()) {
-            // Ajoute le bouton à la séquence du joueur
-            playerSequence.add(button);
-        } else {
+        // Ajoute le bouton à la séquence du joueur
+        playerSequence.add(button);
+
+        if(playerSequence.size() == currentSequence.size()) {
             boolean sequenceIsGood = true;
 
             for(int index = 0; index < playerSequence.size(); index++) {
                 sequenceIsGood &= playerSequence.get(index).equals(currentSequence.get(index));
             }
 
-            Toast.makeText(this, sequenceIsGood ? "You won !":"You loose !", Toast.LENGTH_SHORT).show();
+            gameEnd(sequenceIsGood);
         }
     }
 }
