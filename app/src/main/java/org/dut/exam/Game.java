@@ -12,123 +12,152 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
 
 public class Game extends AppCompatActivity {
 
-    public static final byte NUMBER_OF_BUTTONS = 10;
-    public static final byte NUMBER_OF_HEART = 3;
-    public static final byte MAXIMUM_LEVEL = 7;
-    public static final byte DEFAULT_BUTTONS_NUMBER = 3;
+    /* --- Constantes du jeu --- */
+    private static final byte NUMBER_OF_BUTTONS = 10;
+    private static final byte NUMBER_OF_HEART = 3;
+    private static final byte MAXIMUM_LEVEL = 7;
+    private static final byte DEFAULT_BUTTONS_NUMBER = 3;
 
-    private byte currentLevel = 1;
-    private GameMode gameMode = GameMode.EASY;
-    private byte playerScore;
-    private int lifes;
+    /* --- Constantes de partie --- */
+    private static final byte MIN_SEQUENCE_LENGTH = 1;
+    private static final byte MAX_SEQUENCE_LENGTH = 10;
+    private static final byte MAX_HEALTH = 2;
 
+    /* --- Informations de la partie --- */
+    private byte level;
+    private byte score;
+    private byte health;
+    private GameMode gameMode;
 
+    /* --- Listes de boutons --- */
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
-    private ArrayList<Button> activeGameButtons = new ArrayList<>();
+    private final ArrayList<Button> activeGameButtons = new ArrayList<>();
+    private ArrayList<Button> availableGameButtons = new ArrayList<>();
+    private ArrayList<Button> computerSequenceButtons = new ArrayList<>();
+    private final ArrayList<Button> playerSequenceButtons = new ArrayList<>();
 
-    private ArrayList<Button> currentSequence = new ArrayList<>();
-    private ArrayList<Button> playerSequence = new ArrayList<>();
-
-    private ArrayList<ImageView> heartSprites = new ArrayList<>(NUMBER_OF_HEART);
-
+    /* --- Éléments graphique --- */
     private FloatingActionButton playButton;
     private TextView scoreTextView;
     private  TextView levelTextView;
+    private ArrayList<ImageView> healthBar = new ArrayList<>(NUMBER_OF_HEART);
 
-
-
-    Hashtable<GameMode, Integer> gameModeToHearts = new Hashtable<>();
-
-    public Game() {
-        /* --- Initialise les HashTable --- */
-
-        // Prépare les 2 listes
-        GameMode[] gameModes = GameMode.values();
-        int[] numberOfHearts = {2, 2, 3, 3};
-
-        // Remplit la hashtable
-        for(int index = 0; index < numberOfHearts.length; index++) {
-            gameModeToHearts.put(gameModes[index], numberOfHearts[index]);
-        }
-
-        lifes = gameModeToHearts.get(gameMode);
-
-        /* --- Initialise les scores et niveau -- */
-        playerScore = 0;
-        currentLevel = 0;
-    }
+    Random randomGenerator = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        // Récupère tout les boutons du layout
-        for(int i = 1; i <= NUMBER_OF_BUTTONS; i++) {
-            // Construit l'identifiant et récupère l'id
-            String identifier = "gameButton" + i;
-            int buttonId = getResources().getIdentifier(identifier, "id", getPackageName());
+        // Initialise et affiche le score
+        scoreTextView = findViewById(R.id.scoreTextView);
+        score = 0;
 
-            allGameButtons.add(findViewById(buttonId));
+        // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "score".
+        scoreTextView.setText(String.format("%s %d", this.getString(R.string.score_template), score));
+
+        // Initialise et affiche le niveau
+        levelTextView = findViewById(R.id.levelTextView);
+        level = 1;
+
+        // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "level".
+        levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), level));
+
+        // Récupère tout les boutons du jeu
+        this.allGameButtons = getViewFromIdPattern("gameButton", NUMBER_OF_BUTTONS);
+
+        // Initialise les boutons actifs et disponibles
+        this.availableGameButtons = (ArrayList<Button>) this.allGameButtons.clone();
+
+        // Tire numberOfButtons boutons de manière aléatoire
+        for(int i = 0; i < DEFAULT_BUTTONS_NUMBER + level; i++) {
+            int index = randomGenerator.nextInt(availableGameButtons.size());
+            this.activeGameButtons.add(availableGameButtons.remove(index));
         }
 
-        // Affiche tout les coeurs sur le layout
-        for(int i = 1; i <= NUMBER_OF_HEART ; i++) {
-            // Construit l'identifiant et récupère l'id
-            String identifier = "lifeImageView" + i;
-            int heartImageViewId = getResources().getIdentifier(identifier, "id", getPackageName());
-
-            heartSprites.add(findViewById(heartImageViewId));
-        }
-
-        // Affiche le bon nombre de coeurs
-        renderHearts();
-
-        // Active le listener du playButton
-        playButton = findViewById(R.id.playButton);
-        playButton.setOnClickListener(
-                (view)->{gameStart();}
-        );
-
-        // Si la liste des boutons actifs n'est pas remplie
-        if (activeGameButtons.size() == 0 ) {
-            generatesActiveGameButtons(DEFAULT_BUTTONS_NUMBER + currentLevel);
-        }
+        scoreTextView = findViewById(R.id.scoreTextView);
+        scoreTextView.setText("Listes: " + activeGameButtons.size() + "," + availableGameButtons.size());
 
         // Affiche les boutons actifs
         for(Button button : activeGameButtons) {
             button.setVisibility(View.VISIBLE);
         }
+        
+        // Initialise le niveau de vie et l'affiche
+        this.healthBar = getViewFromIdPattern("lifeImageView", NUMBER_OF_HEART);
+        health = MAX_HEALTH;
+        refreshHealthBar();
 
-        // Affiche le score
-        scoreTextView = findViewById(R.id.scoreTextView);
-        scoreTextView.setText(String.format("%s %d", this.getString(R.string.score_template), playerScore));
-
-        // Affiche le niveau
-        levelTextView = findViewById(R.id.levelTextView);
-        levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), currentLevel));
+        // Initialise le bouton "play"
+        playButton = findViewById(R.id.playButton);
     }
 
-    private void gameStart() {
+    /**
+     * Récupère un ensemble d'éléments dont l'id corresponds à un "patternX".
+     * @param pattern Paterne de l'id dans R.
+     * @param numberOfElements Nombre d'éléments à récupérer.
+     * @param <T> Type des éléments à récupérer, un View doit être castable en T.
+     * @return La liste d'éléments.
+     */
+    private <T> ArrayList<T> getViewFromIdPattern(String pattern, int numberOfElements) {
+
+        // Prépare la liste des résultats
+        ArrayList<T> result = new ArrayList<T>(numberOfElements);
+
+        for(int i = 1; i <= numberOfElements; i++) {
+
+            // Construit l'identifiant et récupère l'id
+            String identifier = pattern + i;
+            int buttonId = getResources().getIdentifier(identifier, "id", getPackageName());
+
+            result.add( (T)findViewById(buttonId));
+        }
+
+        return result;
+    }
+
+    /**
+     * Rafraichit l'affichage de la bar de vie, assure que le nombre de coeurs affiché est cohérent
+     * avec le niveau de vie du joueur.
+     *
+     * TODO: Passer cette fonction à l'intérieur d'un Setter ?
+     *      Étant donné que cette fonction garantie la cohérence de l'affichage elle doit-être appelé
+     *      à chaque changement de "health".
+     */
+    private void refreshHealthBar(){
+        // Cache tout les coeurs
+        for(ImageView heartSprite : healthBar) {
+            heartSprite.setVisibility(View.GONE);
+        }
+
+        // Dessine les uniquement les coeurs nécessaires
+        for(int index = 0; index < health; index++) {
+            healthBar.get(index).setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Méthode appelé au click sur le bouton "Play". Cache le bouton et lance une partie.
+     * @param view
+     */
+    public void onPlayButtonClick(View view) {
         Toast.makeText(this, "Time to play!", Toast.LENGTH_SHORT).show();
 
         // Cache le bouton
         playButton.setVisibility(View.INVISIBLE);
 
-        generateNewSequence(currentSequence.size() + 1);
+        // generateNewSequence(computerSequenceButtons.size() + 1);
+        computerSequenceButtons = getRandomListFromValues(activeGameButtons, MIN_SEQUENCE_LENGTH);
         animateGameSequence(0, false);
-    }
-
-    protected void unlockActiveButtons() {
-        for(Button button : activeGameButtons) {
-            button.setEnabled(true);
-        }
     }
 
     /**
@@ -140,7 +169,7 @@ public class Game extends AppCompatActivity {
     private void animateGameSequence(int index, boolean reverseCall) {
 
         // Récupère le bouton à animer
-        Button button = this.currentSequence.get(index);
+        Button button = this.computerSequenceButtons.get(index);
 
         button.animate()
                 .setStartDelay(50)
@@ -158,118 +187,125 @@ public class Game extends AppCompatActivity {
                             */
                             animateGameSequence(index, true);
                             button.setText(button.getText() + " " + index);
-                        } else if(index + 1 < currentSequence.size()) {
+                        } else if(index + 1 < computerSequenceButtons.size()) {
                             /*
                             À l'inverse si reverseCall est vrai, on vient de clore l'animation
                             précédente et on peux donc passer au prochain élément.
                              */
                             animateGameSequence(index + 1, false);
                         } else {
-                            // Unlock buttons
-                            unlockActiveButtons();
+                            // Déverrouille tout les boutons
+                            for(Button activeButton : activeGameButtons) {
+                                activeButton.setEnabled(true);
+                            }
                         }
                     }
                 });
     }
 
     /**
-     * Génère une séquence aléatoire en utilisant les boutons actifs.
-     * @param lengthOfSequence Longueur de la séquence.
+     * Créer une liste aléatoire d'une taille donnée composé de valeurs tiré dans une liste donnée.
+     * @param values Valeurs d'origine.
+     * @param numberOfElements Nombre d'éléments que la liste aléatoire doit contenir.
+     * @param <T> Type des listes : d'origine et de sortie.
+     * @return Liste aléatoire d'élément T.
      */
-    private void generateNewSequence(int lengthOfSequence) {
-        // Prépare le générateur aléatoire
-        Random randomGenerator = new Random();
+    private <T> ArrayList<T> getRandomListFromValues(List values, int numberOfElements) {
 
-        // Tire lengthOfSequence boutons de manière aléatoire
-        for(int i = 0; i < lengthOfSequence; i++) {
-            this.currentSequence.add(
-                    activeGameButtons.get(randomGenerator.nextInt(activeGameButtons.size()))
+        // Prépare la liste de résultat et le générateur
+        ArrayList<T> result = new ArrayList<>(numberOfElements);
+
+        // Tire un élément de manière aléatoire dans "values"
+        for(int i = 0; i < numberOfElements; i++) {
+            result.add(
+                    (T) values.get(randomGenerator.nextInt(values.size()))
             );
+        }
+
+        return result;
+    }
+
+    private void onSequenceEnd() {
+
+        // Verrouille tout les boutons
+        for(Button button : activeGameButtons) {
+            button.setEnabled(false);
+
+            // Clean les indices
+            // TODO: Enlever les indices à la fin du dév
+            button.setText("");
+        }
+
+        if(playerSequenceButtons.equals(computerSequenceButtons)) {
+
+            if(playerSequenceButtons.size() == MAX_SEQUENCE_LENGTH) {
+                onNextLevel();
+            } else {
+                // Lance la séquence suivante
+                computerSequenceButtons = getRandomListFromValues(
+                        activeGameButtons, computerSequenceButtons.size() + 1);
+                animateGameSequence(0, false);
+            }
+        } else if(health > 0) {
+
+            // Actualise la barre de vie
+            health -= 1;
+            refreshHealthBar();
+
+            // Relance une nouvelle séquence
+            computerSequenceButtons = getRandomListFromValues(
+                    activeGameButtons, computerSequenceButtons.size());
+            animateGameSequence(0, false);
+
+        } else {
+            Toast.makeText(this,"You loose !", Toast.LENGTH_SHORT).show();
+        }
+
+        // Nettoie la tentative du joueur
+        playerSequenceButtons.clear();
+    }
+
+    private void onNextLevel() {
+        if(level < MAXIMUM_LEVEL) {
+            level += 1;
+            levelTextView.setText(
+                    String.format("%s %d", this.getString(R.string.level_template), level));
+
+            scoreTextView.setText(String.format("size: %d", availableGameButtons.size()));
+
+            // Ajoute un bouton
+            Button newGameButton = availableGameButtons.remove(
+                    randomGenerator.nextInt(availableGameButtons.size()));
+            newGameButton.setVisibility(View.VISIBLE);
+            activeGameButtons.add(newGameButton);
+
+            // Actualise la barre de vie
+            health = MAX_HEALTH;
+            refreshHealthBar();
+
+            // Lance la séquence suivante
+            computerSequenceButtons = getRandomListFromValues(
+                    activeGameButtons, MIN_SEQUENCE_LENGTH);
+            animateGameSequence(0, false);
+        } else {
+            Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
-     * Génère la liste des boutons actifs en tirant aléatoirement des boutons parmi la liste de tout
-     * les boutons du jeu.
-     * @param numberOfButtons Le nombre de boutons à tirer.
+     * Méthode appelé à chaque appuie sur un bouton du jeu, ajoute le bouton pressé à la série en cours.
+     * @param view Bouton pressé
      */
-    protected void generatesActiveGameButtons(int numberOfButtons) {
-        // Copie la liste des boutons disponible
-        ArrayList<Button> availableGameButtons = (ArrayList<Button>) this.allGameButtons.clone();
-
-        // Prépare le générateur aléatoire
-        Random randomGenerator = new Random();
-
-        // Tire numberOfButtons boutons de manière aléatoire
-        for(int i = 0; i < numberOfButtons; i++) {
-            int index = randomGenerator.nextInt(availableGameButtons.size());
-            this.activeGameButtons.add(availableGameButtons.remove(index));
-        }
-    }
-
-    private void renderHearts(){
-        // Enlève tout les coeurs
-        for(ImageView heartSprite : heartSprites) {
-            heartSprite.setVisibility(View.GONE);
-        }
-
-        // Dessine les coeurs nécessaires
-        for(int index = 0; index < lifes; index++) {
-            heartSprites.get(index).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void gameEnd(boolean victory) {
-        // Reset les séquences du joueur et de l'ordinateur
-        playerSequence.clear();
-        currentSequence.clear();
-
-        if(victory) {
-            // Passe au niveau suivant
-            if(currentLevel + 1 > MAXIMUM_LEVEL) {
-                Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
-            } else {
-                currentLevel++;
-                levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), currentLevel));
-
-                // Affiche le bon nombre de coeurs
-                lifes = gameModeToHearts.get(gameMode);
-                renderHearts();
-            }
-            currentLevel++;
-            Toast.makeText(this,"You won !", Toast.LENGTH_SHORT).show();
-
-            // Nouvelle séquence
-            generateNewSequence(currentSequence.size() + 1);
-            animateGameSequence(0, false);
-        } else if(lifes > 0) {
-            // Nouvelle séquence
-            generateNewSequence(currentSequence.size());
-            animateGameSequence(0, false);
-
-            lifes--;
-            // Affiche le bon nombre de coeurs
-            renderHearts();
-        } else {
-            Toast.makeText(this,"You loose !", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void onGameButtonClick(View view) {
+
         // Récupère le bouton cliqué
         Button button = findViewById(view.getId());
 
         // Ajoute le bouton à la séquence du joueur
-        playerSequence.add(button);
+        playerSequenceButtons.add(button);
 
-        if(playerSequence.size() == currentSequence.size()) {
-            boolean sequenceIsCorrect = true;
-
-            for(int index = 0; index < playerSequence.size(); index++) {
-                sequenceIsCorrect &= playerSequence.get(index).equals(currentSequence.get(index));
-            }
-
-            gameEnd(sequenceIsCorrect);
+        if(playerSequenceButtons.size() == computerSequenceButtons.size()) {
+            onSequenceEnd();
         }
     }
 }
