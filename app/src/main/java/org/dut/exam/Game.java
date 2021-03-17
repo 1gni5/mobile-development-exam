@@ -31,6 +31,7 @@ public class Game extends AppCompatActivity {
     private static final byte MIN_SEQUENCE_LENGTH = 1;
     private static final byte MAX_SEQUENCE_LENGTH = 10;
     private static final byte MAX_HEALTH = 2;
+    private static final byte SCORE_WEIGHT = 1;
 
     /* --- Informations de la partie --- */
     private byte level;
@@ -147,7 +148,7 @@ public class Game extends AppCompatActivity {
 
     /**
      * Méthode appelé au click sur le bouton "Play". Cache le bouton et lance une partie.
-     * @param view
+     * @param view playButton
      */
     public void onPlayButtonClick(View view) {
         Toast.makeText(this, "Time to play!", Toast.LENGTH_SHORT).show();
@@ -186,6 +187,8 @@ public class Game extends AppCompatActivity {
                             On appelle rappelle donc l'animation dans l'autre sens.
                             */
                             animateGameSequence(index, true);
+
+                            // TODO: Cette ligne doit être retirer à la fin du développement
                             button.setText(button.getText() + " " + index);
                         } else if(index + 1 < computerSequenceButtons.size()) {
                             /*
@@ -210,7 +213,7 @@ public class Game extends AppCompatActivity {
      * @param <T> Type des listes : d'origine et de sortie.
      * @return Liste aléatoire d'élément T.
      */
-    private <T> ArrayList<T> getRandomListFromValues(List values, int numberOfElements) {
+    private <T> ArrayList<T> getRandomListFromValues(List<T> values, int numberOfElements) {
 
         // Prépare la liste de résultat et le générateur
         ArrayList<T> result = new ArrayList<>(numberOfElements);
@@ -270,8 +273,6 @@ public class Game extends AppCompatActivity {
             level += 1;
             levelTextView.setText(
                     String.format("%s %d", this.getString(R.string.level_template), level));
-
-            scoreTextView.setText(String.format("size: %d", availableGameButtons.size()));
 
             // Ajoute un bouton
             Button newGameButton = availableGameButtons.remove(
