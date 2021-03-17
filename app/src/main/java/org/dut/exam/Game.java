@@ -1,7 +1,5 @@
 package org.dut.exam;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -10,13 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class Game extends AppCompatActivity {
@@ -37,7 +35,6 @@ public class Game extends AppCompatActivity {
     private byte level;
     private byte score;
     private byte health;
-    private GameMode gameMode;
 
     /* --- Listes de boutons --- */
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
@@ -64,14 +61,14 @@ public class Game extends AppCompatActivity {
         score = 0;
 
         // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "score".
-        scoreTextView.setText(String.format("%s %d", this.getString(R.string.score_template), score));
+        scoreTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
 
         // Initialise et affiche le niveau
         levelTextView = findViewById(R.id.levelTextView);
         level = 1;
 
         // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "level".
-        levelTextView.setText(String.format("%s %d", this.getString(R.string.level_template), level));
+        levelTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
 
         // Récupère tout les boutons du jeu
         this.allGameButtons = getViewFromIdPattern("gameButton", NUMBER_OF_BUTTONS);
@@ -84,9 +81,6 @@ public class Game extends AppCompatActivity {
             int index = randomGenerator.nextInt(availableGameButtons.size());
             this.activeGameButtons.add(availableGameButtons.remove(index));
         }
-
-        scoreTextView = findViewById(R.id.scoreTextView);
-        scoreTextView.setText("Listes: " + activeGameButtons.size() + "," + availableGameButtons.size());
 
         // Affiche les boutons actifs
         for(Button button : activeGameButtons) {
@@ -118,9 +112,9 @@ public class Game extends AppCompatActivity {
 
             // Construit l'identifiant et récupère l'id
             String identifier = pattern + i;
-            int buttonId = getResources().getIdentifier(identifier, "id", getPackageName());
+            int viewId = getResources().getIdentifier(identifier, "id", getPackageName());
 
-            result.add( (T)findViewById(buttonId));
+            result.add( (T)findViewById(viewId));
         }
 
         return result;
@@ -270,9 +264,16 @@ public class Game extends AppCompatActivity {
 
     private void onNextLevel() {
         if(level < MAXIMUM_LEVEL) {
+
+            // Met à jour le niveau
             level += 1;
             levelTextView.setText(
-                    String.format("%s %d", this.getString(R.string.level_template), level));
+                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
+
+            // Met à jour le score
+            score += level * SCORE_WEIGHT;
+            scoreTextView.setText(
+                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
 
             // Ajoute un bouton
             Button newGameButton = availableGameButtons.remove(
