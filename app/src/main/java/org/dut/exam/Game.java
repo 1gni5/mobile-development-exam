@@ -265,16 +265,16 @@ public class Game extends AppCompatActivity {
     private void onNextLevel() {
         if(level < MAXIMUM_LEVEL) {
 
-            // Met à jour le niveau
-            level += 1;
-            levelTextView.setText(
-                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
-
             // Met à jour le score
             score += level * SCORE_WEIGHT;
             scoreTextView.setText(
                     String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
 
+            // Met à jour le niveau
+            level += 1;
+            levelTextView.setText(
+                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
+            
             // Ajoute un bouton
             Button newGameButton = availableGameButtons.remove(
                     randomGenerator.nextInt(availableGameButtons.size()));
