@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LevelSelection">
+
+    <!-- Right Margin -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Left Margin -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <!-- App Title -->
+
+    <!-- Level choice buttons -->
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="@string/level_selection_text"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/easyGameModeButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/easyGameModeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/easy_gamemode_title"
+        app:layout_constraintBottom_toTopOf="@+id/hardGameModeButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/hardGameModeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/hard_gamemode_title"
+        app:layout_constraintBottom_toTopOf="@+id/expertGameModeButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/easyGameModeButton" />
+
+    <Button
+        android:id="@+id/expertGameModeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/expert_gamemode_title"
+        app:layout_constraintBottom_toTopOf="@+id/timedGameModeButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/hardGameModeButton" />
+
+    <Button
+        android:id="@+id/timedGameModeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/timed_gamemode_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/expertGameModeButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
