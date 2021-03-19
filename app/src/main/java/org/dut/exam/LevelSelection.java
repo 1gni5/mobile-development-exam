@@ -67,11 +67,11 @@ public class LevelSelection extends AppCompatActivity {
     }
 
     private void loadGame(
-            int maxHealth, double scoreWeigth, int minSequence, int maxSequence, boolean timed) {
+            int maxHealth, double scoreWeight, int minSequence, int maxSequence, boolean timed) {
 
         // Remplit le bundle
         bundle.putInt("maxHealth", maxHealth);
-        bundle.putDouble("scoreWeigth", scoreWeigth);
+        bundle.putDouble("scoreWeight", scoreWeight);
         bundle.putInt("minSequence", minSequence);
         bundle.putInt("maxSequence", maxSequence);
         bundle.putBoolean("isTimed", timed);
