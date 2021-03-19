@@ -1,5 +1,6 @@
 package org.dut.exam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -25,16 +26,10 @@ public class Game extends AppCompatActivity {
     private static final byte MAXIMUM_LEVEL = 7;
     private static final byte DEFAULT_BUTTONS_NUMBER = 3;
 
-    /* --- Constantes de partie --- */
-    private static final byte MIN_SEQUENCE_LENGTH = 1;
-    private static final byte MAX_SEQUENCE_LENGTH = 10;
-    private static final byte MAX_HEALTH = 2;
-    private static final byte SCORE_WEIGHT = 1;
-
     /* --- Informations de la partie --- */
-    private byte level;
-    private byte score;
-    private byte health;
+    private int level;
+    private int score;
+    private int health;
 
     /* --- Listes de boutons --- */
     private ArrayList<Button> allGameButtons = new ArrayList<>(NUMBER_OF_BUTTONS);
@@ -49,12 +44,20 @@ public class Game extends AppCompatActivity {
     private  TextView levelTextView;
     private ArrayList<ImageView> healthBar = new ArrayList<>(NUMBER_OF_HEART);
 
+    /* --- Éléments passés à l'activité --- */
+    Intent intent;
+    Bundle bundle;
+
     Random randomGenerator = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        // Initialise le tranfert de données
+        intent = getIntent();
+        bundle = intent.getExtras();
 
         // Initialise et affiche le score
         scoreTextView = findViewById(R.id.scoreTextView);
@@ -89,7 +92,7 @@ public class Game extends AppCompatActivity {
         
         // Initialise le niveau de vie et l'affiche
         this.healthBar = getViewFromIdPattern("lifeImageView", NUMBER_OF_HEART);
-        health = MAX_HEALTH;
+        health = bundle.getInt("maxHealth");
         refreshHealthBar();
 
         // Initialise le bouton "play"
@@ -151,7 +154,7 @@ public class Game extends AppCompatActivity {
         playButton.setVisibility(View.INVISIBLE);
 
         // generateNewSequence(computerSequenceButtons.size() + 1);
-        computerSequenceButtons = getRandomListFromValues(activeGameButtons, MIN_SEQUENCE_LENGTH);
+        computerSequenceButtons = getRandomListFromValues(activeGameButtons, bundle.getInt("minSequence"));
         animateGameSequence(0, false);
     }
 
@@ -235,7 +238,7 @@ public class Game extends AppCompatActivity {
 
         if(playerSequenceButtons.equals(computerSequenceButtons)) {
 
-            if(playerSequenceButtons.size() == MAX_SEQUENCE_LENGTH) {
+            if(playerSequenceButtons.size() ==  bundle.getInt("maxSequence")) {
                 onNextLevel();
             } else {
                 // Lance la séquence suivante
@@ -266,7 +269,7 @@ public class Game extends AppCompatActivity {
         if(level < MAXIMUM_LEVEL) {
 
             // Met à jour le score
-            score += level * SCORE_WEIGHT;
+            score += level * bundle.getDouble("scoreWeight");
             scoreTextView.setText(
                     String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
 
@@ -282,12 +285,12 @@ public class Game extends AppCompatActivity {
             activeGameButtons.add(newGameButton);
 
             // Actualise la barre de vie
-            health = MAX_HEALTH;
+            health = bundle.getInt("maxHealth");
             refreshHealthBar();
 
             // Lance la séquence suivante
             computerSequenceButtons = getRandomListFromValues(
-                    activeGameButtons, MIN_SEQUENCE_LENGTH);
+                    activeGameButtons, bundle.getInt("minSequence"));
             animateGameSequence(0, false);
         } else {
             Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
