@@ -28,7 +28,7 @@ public class Game extends AppCompatActivity {
 
     /* --- Informations de la partie --- */
     private int level;
-    private int score;
+    private double score;
     private int health;
 
     /* --- Listes de boutons --- */
@@ -61,17 +61,11 @@ public class Game extends AppCompatActivity {
 
         // Initialise et affiche le score
         scoreTextView = findViewById(R.id.scoreTextView);
-        score = 0;
-
-        // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "score".
-        scoreTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
+        setScore(0.0);
 
         // Initialise et affiche le niveau
         levelTextView = findViewById(R.id.levelTextView);
-        level = 1;
-
-        // TODO: Passer en Setter ? Doit-être appelé à chaque changement de "level".
-        levelTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
+        setLevel(1);
 
         // Récupère tout les boutons du jeu
         this.allGameButtons = getViewFromIdPattern("gameButton", NUMBER_OF_BUTTONS);
@@ -97,6 +91,20 @@ public class Game extends AppCompatActivity {
 
         // Initialise le bouton "play"
         playButton = findViewById(R.id.playButton);
+    }
+
+    private void setScore(double value) {
+        this.score = value;
+
+        // Rafraichit l'affichage
+        scoreTextView.setText(String.format(Locale.getDefault(),"%s %1.1f", this.getString(R.string.score_template), score));
+    }
+
+    private void setLevel(int value) {
+        this.level = value;
+
+        // Rafraichit l'affichage
+        levelTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
     }
 
     /**
@@ -269,14 +277,10 @@ public class Game extends AppCompatActivity {
         if(level < MAXIMUM_LEVEL) {
 
             // Met à jour le score
-            score += level * bundle.getDouble("scoreWeight");
-            scoreTextView.setText(
-                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.score_template), score));
+            setScore(score  + level * bundle.getDouble("scoreWeight"));
 
             // Met à jour le niveau
-            level += 1;
-            levelTextView.setText(
-                    String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
+            setLevel(level + 1);
             
             // Ajoute un bouton
             Button newGameButton = availableGameButtons.remove(
