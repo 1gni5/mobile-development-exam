@@ -86,8 +86,7 @@ public class Game extends AppCompatActivity {
         
         // Initialise le niveau de vie et l'affiche
         this.healthBar = getViewFromIdPattern("lifeImageView", NUMBER_OF_HEART);
-        health = bundle.getInt("maxHealth");
-        refreshHealthBar();
+        setHealth(bundle.getInt("maxHealth"));
 
         // Initialise le bouton "play"
         playButton = findViewById(R.id.playButton);
@@ -105,6 +104,20 @@ public class Game extends AppCompatActivity {
 
         // Rafraichit l'affichage
         levelTextView.setText(String.format(Locale.getDefault(),"%s %d", this.getString(R.string.level_template), level));
+    }
+
+    private void setHealth(int value) {
+        this.health = value;
+
+        // Cache tout les coeurs
+        for(ImageView heartSprite : healthBar) {
+            heartSprite.setVisibility(View.GONE);
+        }
+
+        // Dessine les uniquement les coeurs nécessaires
+        for(int index = 0; index < health; index++) {
+            healthBar.get(index).setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -129,26 +142,6 @@ public class Game extends AppCompatActivity {
         }
 
         return result;
-    }
-
-    /**
-     * Rafraichit l'affichage de la bar de vie, assure que le nombre de coeurs affiché est cohérent
-     * avec le niveau de vie du joueur.
-     *
-     * TODO: Passer cette fonction à l'intérieur d'un Setter ?
-     *      Étant donné que cette fonction garantie la cohérence de l'affichage elle doit-être appelé
-     *      à chaque changement de "health".
-     */
-    private void refreshHealthBar(){
-        // Cache tout les coeurs
-        for(ImageView heartSprite : healthBar) {
-            heartSprite.setVisibility(View.GONE);
-        }
-
-        // Dessine les uniquement les coeurs nécessaires
-        for(int index = 0; index < health; index++) {
-            healthBar.get(index).setVisibility(View.VISIBLE);
-        }
     }
 
     /**
@@ -194,7 +187,7 @@ public class Game extends AppCompatActivity {
                             animateGameSequence(index, true);
 
                             // TODO: Cette ligne doit être retirer à la fin du développement
-                            button.setText(button.getText() + " " + index);
+                            button.setText(button.getText() + " " + (index + 1) );
                         } else if(index + 1 < computerSequenceButtons.size()) {
                             /*
                             À l'inverse si reverseCall est vrai, on vient de clore l'animation
@@ -257,8 +250,7 @@ public class Game extends AppCompatActivity {
         } else if(health > 0) {
 
             // Actualise la barre de vie
-            health -= 1;
-            refreshHealthBar();
+            setHealth(health - 1);
 
             // Relance une nouvelle séquence
             computerSequenceButtons = getRandomListFromValues(
@@ -289,8 +281,7 @@ public class Game extends AppCompatActivity {
             activeGameButtons.add(newGameButton);
 
             // Actualise la barre de vie
-            health = bundle.getInt("maxHealth");
-            refreshHealthBar();
+            setHealth(bundle.getInt("maxHealth"));
 
             // Lance la séquence suivante
             computerSequenceButtons = getRandomListFromValues(
