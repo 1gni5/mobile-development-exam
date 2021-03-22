@@ -149,13 +149,12 @@ public class Game extends AppCompatActivity {
      * @param view playButton
      */
     public void onPlayButtonClick(View view) {
-        Toast.makeText(this, "Time to play!", Toast.LENGTH_SHORT).show();
-
         // Cache le bouton
         playButton.setVisibility(View.INVISIBLE);
 
         // generateNewSequence(computerSequenceButtons.size() + 1);
-        computerSequenceButtons = getRandomListFromValues(activeGameButtons, bundle.getInt("minSequence"));
+        computerSequenceButtons = getRandomListFromValues(
+                        activeGameButtons, bundle.getInt("minSequence"));
         animateGameSequence(0, false);
     }
 
@@ -259,6 +258,28 @@ public class Game extends AppCompatActivity {
 
         } else {
             Toast.makeText(this,"You loose !", Toast.LENGTH_SHORT).show();
+
+            // Re-initialise : score, niveau et niveau de vie
+            setScore(0.0);
+            setLevel(1);
+            setHealth(bundle.getInt("maxHealth"));
+
+            // Retire les boutons en trop
+            int buttonOverflow =  activeGameButtons.size() - (DEFAULT_BUTTONS_NUMBER + level);
+            for(int index = 0; index < buttonOverflow; index++) {
+                Button removedButton = activeGameButtons.remove(index);
+                availableGameButtons.add(removedButton);
+
+                // Cache le bouton
+                removedButton.setVisibility(View.GONE);
+            }
+
+
+
+            // Relance une nouvelle séquence
+            computerSequenceButtons = getRandomListFromValues(
+                    activeGameButtons, bundle.getInt("minSequence"));
+            animateGameSequence(0, false);
         }
 
         // Nettoie la tentative du joueur
