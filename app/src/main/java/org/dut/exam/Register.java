@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -21,9 +22,10 @@ public class Register extends AppCompatActivity {
 
         // Récupère les champs
         EditText birthDate = (EditText)findViewById(R.id.birthDateEditText);
+        ImageButton birthDatePickerButton = (ImageButton)findViewById(R.id.birthDatePickerImageButton);
 
         // Ajoute les listeners
-        birthDate.setOnClickListener(new View.OnClickListener() {
+        birthDatePickerButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
