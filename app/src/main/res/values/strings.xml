@@ -5,6 +5,7 @@
     <string name="hint_first_name">Prénom</string>
     <string name="hint_last_name">Nom</string>
     <string name="hint_birth_date">Date de naissance</string>
+    <string name="birthdate_calendar_image_description">Clique ici pour choisir ta date de naissance</string>
     <string name="gender_hint">Sexe</string>
     <string name="male_gender">Homme</string>
     <string name="female_gender">Femme</string>

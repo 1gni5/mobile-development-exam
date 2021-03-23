@@ -85,10 +85,25 @@
         android:hint="@string/hint_birth_date"
         android:inputType="date"
         app:layout_constraintBottom_toTopOf="@+id/genderRadioGroup"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/birthDatePickerImageButton"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_weight="0.90"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/lastNameEditText" />
+
+    <!-- Date Picker Button -->
+    <ImageButton
+        android:id="@+id/birthDatePickerImageButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/birthdate_calendar_image_description"
+        app:layout_constraintBottom_toTopOf="@+id/genderRadioGroup"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_weight="0.10"
+        app:layout_constraintStart_toEndOf="@+id/birthDateEditText"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameEditText"
+        app:srcCompat="@drawable/ic_today_24px" />
 
     <!-- Gender RadioGroup -->
     <RadioGroup
