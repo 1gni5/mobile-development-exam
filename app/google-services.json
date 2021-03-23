@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "77161228364",
+    "project_id": "examdevmobile-7e8b2",
+    "storage_bucket": "examdevmobile-7e8b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77161228364:android:4c6e2f725335da77036ce9",
+        "android_client_info": {
+          "package_name": "org.dut.exam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77161228364-r2jisk3tdsc0h61db2qjmfigclfav2lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmKpQ9m8BDRrb9j1DSHZsD4RlbjzLjPYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77161228364-r2jisk3tdsc0h61db2qjmfigclfav2lm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
