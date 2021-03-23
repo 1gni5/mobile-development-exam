@@ -17,13 +17,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +31,7 @@ public class Register extends AppCompatActivity {
 
     EditText email;
     EditText password;
+    EditText lastname, firstname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +47,8 @@ public class Register extends AppCompatActivity {
         ImageButton birthDatePickerButton = (ImageButton)findViewById(R.id.birthDatePickerImageButton);
         email = (EditText)findViewById(R.id.emailEditText);
         password = (EditText)findViewById(R.id.passwordEditText);
+        lastname = (EditText)findViewById(R.id.lastNameEditText);
+        firstname = (EditText)findViewById(R.id.firstNameEditText);
 
         // Ajoute les listeners
         birthDatePickerButton.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +82,11 @@ public class Register extends AppCompatActivity {
     private void createAccount(String email, String password) {
         // Créer un nouvel utilisateur
         Map<String, Object> user = new HashMap<>();
-        user.put("firstName", "TestFirst");
-        user.put("lastName", "TestLast");
+        user.put("firstName", firstname);
+        user.put("lastName", lastname);
         user.put("birthDate", Calendar.getInstance().getTime());
+        user.put("email", email);
+        user.put("password", password);
 
         // Authentification
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -118,6 +120,7 @@ public class Register extends AppCompatActivity {
     }
 
     public void onSignUpClick(View view) {
-        createAccount("example2@mail.com", "123password");
+        createAccount("example2@mail.fr", "motdepasse123");
     }
+
 }
