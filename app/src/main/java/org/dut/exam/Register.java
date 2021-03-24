@@ -85,7 +85,7 @@ public class Register extends AppCompatActivity {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, year);
 
-                        birthDate.setText(DateFormat.getDateInstance().format(
+                        birthDate.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(
                                 calendar.getTime()
                         ));
                     }
@@ -121,7 +121,7 @@ public class Register extends AppCompatActivity {
      */
     private boolean isBirthDateValid() {
         try {
-            DateFormat.getDateInstance().parse(birthDate.getText().toString());
+            DateFormat.getDateInstance(DateFormat.SHORT).parse(birthDate.getText().toString());
             return true;
         } catch (ParseException e) {
             birthDate.setError("Format de date invalide.");

@@ -82,7 +82,7 @@
         android:autofillHints="Birth date"
         android:ems="10"
         android:hint="@string/hint_birth_date"
-        android:inputType="text"
+        android:inputType="date"
         app:layout_constraintBottom_toTopOf="@+id/genderRadioGroup"
         app:layout_constraintEnd_toStartOf="@+id/birthDatePickerImageButton"
         app:layout_constraintHorizontal_bias="0.5"
