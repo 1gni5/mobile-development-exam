@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
@@ -96,20 +97,28 @@ public class Register extends AppCompatActivity {
 
     public void onSignUpClick(View view) {
         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                .addOnFailureListener(Register.this, new OnFailureListener() {
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Log l'erreur
-                        Log.i(FIREBASE_TAG, String.format("User registration failed: %s", e.toString()));
-                    }
-                })
-                .addOnSuccessListener(Register.this, new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        // Log l'inscription
-                        Log.i(FIREBASE_TAG, String.format("User %s registered successfully.", mAuth.getCurrentUser().getUid()));
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(FIREBASE_TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+
+                            // Passe sur l'écran de sélection
+                            startActivity(new Intent(Register.this, Login.class));
+                        } else {
+                            // Log l'erreur et prévient l'utilisateur
+                            Log.w(FIREBASE_TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(Register.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 });
     }
 
+    public void onRegisterLinkClick(View view) {
+        startActivity(new Intent(Register.this, Login.class));
+    }
 }

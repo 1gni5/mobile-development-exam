@@ -33,8 +33,6 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="@string/app_name"
         android:textSize="30sp"
@@ -58,7 +56,8 @@
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <!-- Last Name EditText -->
     <EditText
@@ -83,9 +82,10 @@
         android:autofillHints="Birth date"
         android:ems="10"
         android:hint="@string/hint_birth_date"
-        android:inputType="date"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/genderRadioGroup"
         app:layout_constraintEnd_toStartOf="@+id/birthDatePickerImageButton"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintHorizontal_weight="0.90"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -134,6 +134,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:checked="true"
             android:text="@string/male_gender" />
 
         <!-- Female -->
@@ -180,12 +181,30 @@
         android:id="@+id/registerButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:onClick="onSignUpClick"
         android:text="@string/register_button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/RegisterLinkTextView"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
+    <!-- Register Link -->
+    <TextView
+        android:id="@+id/RegisterLinkTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:onClick="onRegisterLinkClick"
+        android:text="@string/register_link"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/registerButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
