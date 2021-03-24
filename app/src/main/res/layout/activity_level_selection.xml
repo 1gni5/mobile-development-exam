@@ -27,7 +27,6 @@
     <!-- App Title -->
 
     <!-- Level choice buttons -->
-
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -36,7 +35,7 @@
         android:gravity="center"
         android:text="@string/level_selection_text"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/easyGameModeButton"
+        app:layout_constraintBottom_toTopOf="@+id/loadSavedGameButton"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -44,12 +43,13 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/easyGameModeButton"
+        android:id="@+id/loadSavedGameButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/easy_gamemode_title"
-        app:layout_constraintBottom_toTopOf="@+id/hardGameModeButton"
+        android:layout_marginBottom="16dp"
+        android:text="@string/load_saved_title"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/easyGameModeButton"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -57,10 +57,21 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
+        android:id="@+id/easyGameModeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/easy_gamemode_title"
+        app:layout_constraintBottom_toTopOf="@+id/hardGameModeButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/loadSavedGameButton"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
         android:id="@+id/hardGameModeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/hard_gamemode_title"
         app:layout_constraintBottom_toTopOf="@+id/expertGameModeButton"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
@@ -72,7 +83,6 @@
         android:id="@+id/expertGameModeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/expert_gamemode_title"
         app:layout_constraintBottom_toTopOf="@+id/timedGameModeButton"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
