@@ -35,6 +35,10 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Récupère les champs
+        email = findViewById(R.id.emailEditText);
+        password = findViewById(R.id.passwordEditText);
+
         // Initialise FireBase
         mAuth = FirebaseAuth.getInstance();
     }
