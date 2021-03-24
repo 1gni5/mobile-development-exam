@@ -198,7 +198,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:onClick="onRegisterLinkClick"
-        android:text="@string/register_link"
+        android:text="@string/login_link"
         android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
