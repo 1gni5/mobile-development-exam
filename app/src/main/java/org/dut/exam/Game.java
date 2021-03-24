@@ -12,10 +12,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 public class Game extends AppCompatActivity {
@@ -48,6 +53,11 @@ public class Game extends AppCompatActivity {
     Intent intent;
     Bundle bundle;
 
+    /* --- FireBase --- */
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore database;
+    private FirebaseUser currentUser;
+
     Random randomGenerator = new Random();
 
     @Override
@@ -61,11 +71,11 @@ public class Game extends AppCompatActivity {
 
         // Initialise et affiche le score
         scoreTextView = findViewById(R.id.scoreTextView);
-        setScore(0.0);
+        setScore(bundle.getDouble("score"));
 
         // Initialise et affiche le niveau
         levelTextView = findViewById(R.id.levelTextView);
-        setLevel(1);
+        setLevel(bundle.getInt("level"));
 
         // Récupère tout les boutons du jeu
         this.allGameButtons = getViewFromIdPattern("gameButton", NUMBER_OF_BUTTONS);
@@ -86,10 +96,23 @@ public class Game extends AppCompatActivity {
         
         // Initialise le niveau de vie et l'affiche
         this.healthBar = getViewFromIdPattern("lifeImageView", NUMBER_OF_HEART);
-        setHealth(bundle.getInt("maxHealth"));
+        setHealth(bundle.getInt("health"));
 
         // Initialise le bouton "play"
         playButton = findViewById(R.id.playButton);
+
+        // Initialise FireBase
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
+        currentUser = mAuth.getCurrentUser();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Sauvegarde la partie
+        saveGameToFireBase();
     }
 
     private void setScore(double value) {
@@ -117,6 +140,25 @@ public class Game extends AppCompatActivity {
         // Dessine les uniquement les coeurs nécessaires
         for(int index = 0; index < health; index++) {
             healthBar.get(index).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void saveGameToFireBase(){
+        // Créer une sauvegarde
+        Map<String, Object> game = new HashMap<>();
+        game.put("maxHealth", bundle.getInt("maxHealth"));
+        game.put("health", health);
+        game.put("score", score);
+        game.put("scoreWeight", bundle.getDouble("scoreWeight"));
+        game.put("sequenceSize", computerSequenceButtons.size());
+        game.put("minSequence", bundle.getInt("minSequence"));
+        game.put("maxSequence", bundle.getInt("maxSequence"));
+        game.put("isTimed", bundle.getBoolean("isTimed"));
+        game.put("level", level);
+
+        if(currentUser != null){
+            // Envoie la sauvegarde à FireBase
+            database.collection("saves").document(currentUser.getUid()).set(game);
         }
     }
 
@@ -154,7 +196,7 @@ public class Game extends AppCompatActivity {
 
         // generateNewSequence(computerSequenceButtons.size() + 1);
         computerSequenceButtons = getRandomListFromValues(
-                        activeGameButtons, bundle.getInt("minSequence"));
+                        activeGameButtons, bundle.getInt("sequenceSize"));
         animateGameSequence(0, false);
     }
 
@@ -304,9 +346,15 @@ public class Game extends AppCompatActivity {
             // Actualise la barre de vie
             setHealth(bundle.getInt("maxHealth"));
 
-            // Lance la séquence suivante
+
+
+            // Génére la prochaine séquence
             computerSequenceButtons = getRandomListFromValues(
                     activeGameButtons, bundle.getInt("minSequence"));
+            // Sauvegarde la partie
+            saveGameToFireBase();
+
+            // Lance la séquence suivante
             animateGameSequence(0, false);
         } else {
             Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
