@@ -37,14 +37,6 @@ public class Login extends AppCompatActivity {
 
         // Initialise FireBase
         mAuth = FirebaseAuth.getInstance();
-
-        // Ajoute le listener
-        findViewById(R.id.RegisterLink).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Login.this, Register.class));
-            }
-        });
     }
 
     public void onLoginClick(View view) {
@@ -66,5 +58,9 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void onLoginLinkClick(View view) {
+        startActivity(new Intent(Login.this, Register.class));
     }
 }
