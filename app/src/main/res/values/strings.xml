@@ -30,4 +30,5 @@
     <string name="expert_gamemode_title">Expert</string>
     <string name="timed_gamemode_title">Chrono</string>
     <string name="level_selection_text">Modes de jeu</string>
+    <string name="load_saved_title">Reprendre</string>
 </resources>
