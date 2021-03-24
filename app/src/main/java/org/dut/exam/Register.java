@@ -95,27 +95,90 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    /**
+     * Vérifie que tout les champs du formulaire soient remplis, ajoute une erreur si le champ
+     * est vide.
+     * @return True si le formulaire est remplis, false sinon.
+     */
+    private boolean isFormComplete() {
+        // Champs à vérifier
+        EditText[] editTexts = {firstName, lastName, birthDate, email, password};
+        boolean formIsComplete = true;
+
+        for(EditText editText : editTexts) {
+            if(editText.getText().toString().isEmpty()) {
+                formIsComplete = false;
+                editText.setError("Ce champs est obligatoire.");
+            }
+        }
+
+        return formIsComplete;
+    }
+
+    /**
+     * Vérifie si la date de naissance donnée est valide, si non affiche une erreur.
+     * @return True si la date est valide, false sinon.
+     */
+    private boolean isBirthDateValid() {
+        try {
+            DateFormat.getDateInstance().parse(birthDate.getText().toString());
+            return true;
+        } catch (ParseException e) {
+            birthDate.setError("Format de date invalide.");
+            return false;
+        }
+    }
+
+    private Map<String, Object> createUserFromActivityData(){
+        Map<String, Object> user = new HashMap<>();
+
+        // Récupère le nom et le prénom
+        user.put("firstName", firstName.getText().toString());
+        user.put("lastName", lastName.getText().toString());
+
+        // Essaye de parser la date
+        try {
+            user.put("birthDate",
+                    DateFormat.getDateInstance().parse(birthDate.getText().toString()));
+        } catch (ParseException e) {
+            // En cas d'erreur de parse => passe la date du jour
+            user.put("birthDate", Calendar.getInstance().getTime());
+        }
+
+        // Récupère le genre
+        RadioButton selectedGender = findViewById(genders.getCheckedRadioButtonId());
+        user.put("gender", selectedGender.getText().toString());
+
+        return user;
+    }
+
     public void onSignUpClick(View view) {
-        mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(FIREBASE_TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+        if(isFormComplete() && isBirthDateValid()) {
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(FIREBASE_TAG, "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
 
+                                // Ajoute l'utilisateur à FireBase
+                                database.collection("users")
+                                        .document(user.getUid())
+                                        .set(createUserFromActivityData());
 
-                            // Passe sur l'écran de sélection
-                            startActivity(new Intent(Register.this, Login.class));
-                        } else {
-                            // Log l'erreur et prévient l'utilisateur
-                            Log.w(FIREBASE_TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                                // Passe sur l'écran de sélection
+                                startActivity(new Intent(Register.this, Login.class));
+                            } else {
+                                // Log l'erreur et prévient l'utilisateur
+                                Log.w(FIREBASE_TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(Register.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
 
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     public void onRegisterLinkClick(View view) {
