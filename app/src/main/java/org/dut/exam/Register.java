@@ -168,7 +168,7 @@ public class Register extends AppCompatActivity {
                                         .set(createUserFromActivityData());
 
                                 // Passe sur l'écran de sélection
-                                startActivity(new Intent(Register.this, Login.class));
+                                startActivity(new Intent(Register.this, LevelSelection.class));
                             } else {
                                 // Log l'erreur et prévient l'utilisateur
                                 Log.w(FIREBASE_TAG, "createUserWithEmail:failure", task.getException());
