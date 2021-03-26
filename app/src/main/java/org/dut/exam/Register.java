@@ -136,18 +136,13 @@ public class Register extends AppCompatActivity {
         user.put("firstName", firstName.getText().toString());
         user.put("lastName", lastName.getText().toString());
 
-        // Essaye de parser la date
-        try {
-            user.put("birthDate",
-                    DateFormat.getDateInstance().parse(birthDate.getText().toString()));
-        } catch (ParseException e) {
-            // En cas d'erreur de parse => passe la date du jour
-            user.put("birthDate", Calendar.getInstance().getTime());
-        }
+        // Ajoute la date de naissance
+        user.put("birthDate", birthDate.getText().toString());
 
         // Récupère le genre
         RadioButton selectedGender = findViewById(genders.getCheckedRadioButtonId());
-        user.put("gender", selectedGender.getText().toString());
+        String gender = selectedGender.getText().toString().equals(this.getString(R.string.male_gender)) ? "Male":"Female";
+        user.put("gender", gender);
 
         return user;
     }
