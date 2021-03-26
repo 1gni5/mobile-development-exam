@@ -12,9 +12,11 @@
     <string name="hint_email">Adresse e-mail</string>
     <string name="hint_password">Mot de passe</string>
     <string name="register_button">S\'inscrire</string>
+    <string name="login_link">Déjà un compte ? Clique ici !</string>
 
     <!-- Login Activity. -->
     <string name="login_button">Se connecter</string>
+    <string name="register_link">Pas de compte ? Clique ici !</string>
 
     <!-- Game Activity. -->
     <string name="score_template">Score:</string>
@@ -28,4 +30,5 @@
     <string name="expert_gamemode_title">Expert</string>
     <string name="timed_gamemode_title">Chrono</string>
     <string name="level_selection_text">Modes de jeu</string>
+    <string name="load_saved_title">Reprendre</string>
 </resources>

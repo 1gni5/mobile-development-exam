@@ -1,19 +1,34 @@
 package org.dut.exam;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LevelSelection extends AppCompatActivity {
 
-    Intent intent;
-    Bundle bundle;
-    private final static byte NUMBER_OF_GAMEMODE = 4;
+    private static final String FIREBASE_TAG = "FireBaseAuthentication";
+
+    /* --- FireBase --- */
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore database;
+    private FirebaseUser currentUser;
+
+    /* -- Bundle --- */
+    private Intent intent;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +38,22 @@ public class LevelSelection extends AppCompatActivity {
         intent = new Intent(LevelSelection.this, Game.class);
         bundle = new Bundle();
 
+        // Initialise FireBase
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
+
+        // Récupère le score de l'utilisateur
+        currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            reloadWithUserData();
+        }
 
         // Mode facile
         findViewById(R.id.easyGameModeButton).setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    loadGame(2, 1.0, 1, 10, false);
+                    loadGame(2, 2, 0.0, 1.0, 1, 1, 3, 1, false);
                 }
             }
         );
@@ -39,7 +63,7 @@ public class LevelSelection extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        loadGame(2, 1.5, 3, 15, false);
+                        loadGame(2, 2, 0.0, 1.5, 1, 3, 15, 1, false);
                     }
                 }
         );
@@ -49,7 +73,7 @@ public class LevelSelection extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        loadGame(3, 3, 5, 20, false);
+                        loadGame(3, 3, 0.0, 3, 1, 5, 20, 1, false);
                     }
                 }
         );
@@ -59,21 +83,68 @@ public class LevelSelection extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        loadGame(3, 2, 1, 99, true);
+                        loadGame(3, 3, 0.0, 2, 1, 1, 99, 1, true);
                     }
                 }
         );
 
     }
 
+    private void reloadWithUserData(){
+        DocumentReference docRef = database.collection("saves").document(currentUser.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(FIREBASE_TAG, "DocumentSnapshot data: " + document.getData());
+
+                        // Affiche le bouton "reprendre"
+                        Button loadSavedGameButton = findViewById(R.id.loadSavedGameButton);
+                        loadSavedGameButton.setVisibility(View.VISIBLE);
+
+                        loadSavedGameButton.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        loadGame(
+                                                ((Long)document.get("maxHealth")).intValue(),
+                                                ((Long)document.get("health")).intValue(),
+                                                (double)document.get("score"),
+                                                (double)document.get("scoreWeight"),
+                                                ((Long)document.get("sequenceSize")).intValue(),
+                                                ((Long)document.get("minSequence")).intValue(),
+                                                ((Long)document.get("maxSequence")).intValue(),
+                                                ((Long)document.get("level")).intValue(),
+                                                (boolean)document.get("isTimed")
+                                        );
+                                    }
+                                }
+                        );
+
+                    } else {
+                        Log.d(FIREBASE_TAG, "No such document");
+                    }
+                } else {
+                    Log.d(FIREBASE_TAG, "Get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
     private void loadGame(
-            int maxHealth, double scoreWeight, int minSequence, int maxSequence, boolean timed) {
+            int maxHealth, int health, double score, double scoreWeight, int sequenceSize, int minSequence, int maxSequence, int level, boolean timed) {
 
         // Remplit le bundle
         bundle.putInt("maxHealth", maxHealth);
+        bundle.putInt("health", health);
+        bundle.putDouble("score", score);
         bundle.putDouble("scoreWeight", scoreWeight);
+        bundle.putInt("sequenceSize", sequenceSize);
         bundle.putInt("minSequence", minSequence);
         bundle.putInt("maxSequence", maxSequence);
+        bundle.putInt("level", level);
         bundle.putBoolean("isTimed", timed);
 
         // Lance le jeu
