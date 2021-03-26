@@ -141,7 +141,8 @@ public class Register extends AppCompatActivity {
 
         // Récupère le genre
         RadioButton selectedGender = findViewById(genders.getCheckedRadioButtonId());
-        user.put("gender", selectedGender.getText().toString());
+        String gender = selectedGender.getText().toString().equals(this.getString(R.string.male_gender)) ? "Male":"Female";
+        user.put("gender", gender);
 
         return user;
     }
