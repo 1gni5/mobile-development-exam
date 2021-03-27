@@ -26,12 +26,14 @@ au clique sur le bouton "S'inscrire", il est directement redirigé vers le menu 
 Sur cette page, le joueur peut choisir un mode de jeu (facile, difficile, expert ou chrono).
 Au clique sur un mode, il est alors redirigé sur l'activité de jeu choisie, laquelle est chargée différement en fonction du mode.
 Aussi il peut reprendre une potentielle partie précedente qu'il avait mis en pause.
-Sur cette page, le joueur peut aussi consulter son classement parmis la globalité des joeurs, mais aussi son Meilleur score personnel.
+Sur cette page, le joueur peut aussi consulter son classement.
 
 ### En Jeu
 
 __Suivant de mode de jeu séléctionné seul la difficulté augmente__: Dans chaque mode de jeu, la machine montre d'abord la séquence que l'utilisateur devra répeter ensuite.
-Si le joueur commet une erreur, il perd une vie. Lorsque l'utilisateur n'a plus de vie, il perd, son score est enregistré et une partie recommence. En recommençant,
-le joueur efface le score de la partie précédente mais evidemment pas son meilleur score.
+Si le joueur commet une erreur, il perd une vie. Lorsque l'utilisateur n'a plus de vie, il perd. 
+Le score du joueur est enregistré lorsqu'il complète un niveau.
+Une fois une partie perdu, une nouvelle recommence.
+En recommençant, le joueur efface le score de la partie précédente mais evidemment pas son meilleur score.
 
 
