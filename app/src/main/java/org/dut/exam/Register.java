@@ -144,6 +144,9 @@ public class Register extends AppCompatActivity {
         String gender = selectedGender.getText().toString().equals(this.getString(R.string.male_gender)) ? "Male":"Female";
         user.put("gender", gender);
 
+        // Ajoute un meilleur score par défaut
+        user.put("highScore", 0.0);
+
         return user;
     }
 

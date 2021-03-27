@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +17,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
+
+import java.util.Locale;
 
 public class LevelSelection extends AppCompatActivity {
 
@@ -122,12 +128,69 @@ public class LevelSelection extends AppCompatActivity {
                                     }
                                 }
                         );
-
-                    } else {
-                        Log.d(FIREBASE_TAG, "No such document");
                     }
-                } else {
-                    Log.d(FIREBASE_TAG, "Get failed with ", task.getException());
+                }
+            }
+        });
+
+        docRef = database.collection("users").document(currentUser.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(FIREBASE_TAG, "DocumentSnapshot data: " + document.getData());
+
+                        // Active le highScore
+                        TextView highScoreTextView = findViewById(R.id.highScoreTextView);
+                        highScoreTextView.setVisibility(View.VISIBLE);
+
+                        // Met à jour le meilleur score du joueur
+                        highScoreTextView.setText(String.format(
+                                Locale.getDefault(), "%s %1.1f",
+                                LevelSelection.this.getString(R.string.high_score_template),
+                                document.getDouble("highScore"))
+                        );
+
+                        database.collection("users")
+                                .orderBy("highScore")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+
+                                            int rank = 0;
+                                            double currentRankScore = -1.0;
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (currentRankScore < document.getDouble("highScore")) {
+                                                    rank++;
+                                                }
+
+                                                if(document.getId().equals(currentUser.getUid())){
+                                                    // Active le rang
+                                                    TextView rankTextView = findViewById(R.id.rankTextView);
+                                                    rankTextView.setVisibility(View.VISIBLE);
+
+                                                    // Met à jour le rang
+                                                    rankTextView.setText(String.format(
+                                                            Locale.getDefault(), "%s %d",
+                                                            LevelSelection.this.getString(R.string.Rank_template),
+                                                            rank)
+                                                    );
+                                                }
+                                                Log.d(FIREBASE_TAG, "ID : " + document.getId());
+                                                Log.d(FIREBASE_TAG, "ID U : " + currentUser.getUid());
+                                                Log.d(FIREBASE_TAG, document.getId() + " => " + document.getData());
+                                            }
+                                        } else {
+                                            Log.d(FIREBASE_TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
+
+                    }
                 }
             }
         });

@@ -2,6 +2,7 @@ package org.dut.exam;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -9,12 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +33,8 @@ import java.util.Random;
 
 public class Game extends AppCompatActivity {
 
+    private static final String FIREBASE_TAG = "FireBase";
+
     /* --- Constantes du jeu --- */
     private static final byte NUMBER_OF_BUTTONS = 10;
     private static final byte NUMBER_OF_HEART = 3;
@@ -34,6 +44,7 @@ public class Game extends AppCompatActivity {
     /* --- Informations de la partie --- */
     private int level;
     private double score;
+    private double highScore;
     private int health;
 
     /* --- Listes de boutons --- */
@@ -76,6 +87,9 @@ public class Game extends AppCompatActivity {
         // Initialise et affiche le niveau
         levelTextView = findViewById(R.id.levelTextView);
         setLevel(bundle.getInt("level"));
+
+        // Récupère le meilleur score
+        highScore = bundle.getDouble("hightScore");
 
         // Récupère tout les boutons du jeu
         this.allGameButtons = getViewFromIdPattern("gameButton", NUMBER_OF_BUTTONS);
@@ -358,6 +372,46 @@ public class Game extends AppCompatActivity {
             animateGameSequence(0, false);
         } else {
             Toast.makeText(this,"You won the game!", Toast.LENGTH_SHORT).show();
+
+            // Si besoin met à jour le meilleur score
+            if(score > highScore) {
+                highScore = score;
+
+                // Met à jour FireBase
+                database.collection("users").document(currentUser.getUid())
+                        .update("highScore", score);
+            }
+
+            // Supprime la sauvegarde
+            database.collection("saves")
+                    .document(currentUser.getUid())
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(FIREBASE_TAG, "DocumentSnapshot successfully deleted!");
+
+                            // Passe sur l'écran de sélection
+                            startActivity(new Intent(Game.this, LevelSelection.class));
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(FIREBASE_TAG, "Error deleting document", e);
+                        }
+                    });
+                    /*
+                    .delete().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    // Log la suppression
+                    Log.d(FIREBASE_TAG, "onComplete: Deletion complete");
+
+                }
+            });
+
+                     */
         }
     }
 
