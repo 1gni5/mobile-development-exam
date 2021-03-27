@@ -145,7 +145,7 @@ public class Register extends AppCompatActivity {
         user.put("gender", gender);
 
         // Ajoute un meilleur score par défaut
-        user.put("highscore", 0.0);
+        user.put("highScore", 0.0);
 
         return user;
     }
