@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.Locale;
 
@@ -149,6 +152,43 @@ public class LevelSelection extends AppCompatActivity {
                                 LevelSelection.this.getString(R.string.high_score_template),
                                 document.getDouble("highScore"))
                         );
+
+                        database.collection("users")
+                                .orderBy("highScore")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+
+                                            int rank = 0;
+                                            double currentRankScore = -1.0;
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (currentRankScore < document.getDouble("highScore")) {
+                                                    rank++;
+                                                }
+
+                                                if(document.getId().equals(currentUser.getUid())){
+                                                    // Active le rang
+                                                    TextView rankTextView = findViewById(R.id.rankTextView);
+                                                    rankTextView.setVisibility(View.VISIBLE);
+
+                                                    // Met à jour le rang
+                                                    rankTextView.setText(String.format(
+                                                            Locale.getDefault(), "%s %d",
+                                                            LevelSelection.this.getString(R.string.Rank_template),
+                                                            rank)
+                                                    );
+                                                }
+                                                Log.d(FIREBASE_TAG, "ID : " + document.getId());
+                                                Log.d(FIREBASE_TAG, "ID U : " + currentUser.getUid());
+                                                Log.d(FIREBASE_TAG, document.getId() + " => " + document.getData());
+                                            }
+                                        } else {
+                                            Log.d(FIREBASE_TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });
 
                     }
                 }
