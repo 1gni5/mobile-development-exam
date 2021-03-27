@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Locale;
 
 public class LevelSelection extends AppCompatActivity {
 
@@ -122,12 +125,32 @@ public class LevelSelection extends AppCompatActivity {
                                     }
                                 }
                         );
-
-                    } else {
-                        Log.d(FIREBASE_TAG, "No such document");
                     }
-                } else {
-                    Log.d(FIREBASE_TAG, "Get failed with ", task.getException());
+                }
+            }
+        });
+
+        docRef = database.collection("users").document(currentUser.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(FIREBASE_TAG, "DocumentSnapshot data: " + document.getData());
+
+                        // Active le highScore
+                        TextView highScoreTextView = findViewById(R.id.highScoreTextView);
+                        highScoreTextView.setVisibility(View.VISIBLE);
+
+                        // Met à jour le meilleur score du joueur
+                        highScoreTextView.setText(String.format(
+                                Locale.getDefault(), "%s %1.1f",
+                                LevelSelection.this.getString(R.string.high_score_template),
+                                document.getDouble("highScore"))
+                        );
+
+                    }
                 }
             }
         });
