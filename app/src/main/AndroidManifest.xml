@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Exam">
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".Game" android:screenOrientation="landscape"/>
+        <activity android:name=".Game"/>
         <activity android:name=".Register"/>
         <activity android:name=".LevelSelection"/>
         <activity android:name=".Login"
