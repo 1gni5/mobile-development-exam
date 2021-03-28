@@ -95,6 +95,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/timed_gamemode_title"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/highScoreTextView"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintHorizontal_bias="0.5"

@@ -242,7 +242,7 @@ public class Game extends AppCompatActivity {
                             animateGameSequence(index, true);
 
                             // TODO: Cette ligne doit être retirer à la fin du développement
-                            button.setText(button.getText() + " " + (index + 1) );
+                            // button.setText(button.getText() + " " + (index + 1) );
                         } else if(index + 1 < computerSequenceButtons.size()) {
                             /*
                             À l'inverse si reverseCall est vrai, on vient de clore l'animation
@@ -289,7 +289,7 @@ public class Game extends AppCompatActivity {
 
             // Clean les indices
             // TODO: Enlever les indices à la fin du dév
-            button.setText("");
+            // button.setText("");
         }
 
         if(playerSequenceButtons.equals(computerSequenceButtons)) {
