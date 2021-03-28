@@ -1,39 +1,43 @@
-# Auteurs
+# README
 DUCANGE Jules
 CHEMIN Bastien
 
-## Spécifications
+## L'Application
 L'application se compose de plusieurs parties:
 - Un écran d'acceuil/connexion
 - Un écran d'inscription
 - Un écran de sélection de difficulté
 - L'écran de jeu
 
-### Acceuil
+### Acceuil/Connexion
+Sur cette page l'utilisateur peux se connecter à l'aide son _email_ ainsi que de son _mot de passe_.
 
-le joueur peut se connecter ou s'inscrire. 
+__Un fois connecté__: il est redirigé vers le menu de choix de difficulté.
 
-__Si le joueur est déjà connecté__: il est redirigé vers le menu de choix de difficulté de sa partie.
+__Si l'utilisateur n'a pas de compte__: Si l'utilisateur n'a pas de compte il est invité à un créer un en cliquant sur le lien "Pas de compte ? Clique ici !".
+Il sera alors redirigé vers la page d'inscription (Voir __Inscription__).
 
-__Si le joueur n'est pas encore connecté__: si le joueur à un compte il se connecte à  celui-ci, 
-si  il n'en possède pas il est invité à s'inscrire en cliquant sur la mention "Pas de compte ? Clique ici !".
+### Inscription
+Sur cette page l'utilisateur peux se créer un compte. Pour cela il lui faudra remplir __tout__ les champs du formulaire, si un champs n'est pas renseigné, l'inscription se bloquera indiquant à l'utilisateur le champs à remplir. 
 
-__Le  joeur ayant cliqué sur la mention__: est redirigé vers la page de création de compte. Une fois toute les informations renseignées,
-au clique sur le bouton "S'inscrire", il est directement redirigé vers le menu de selection de difficulté.
+#### Date de naissance
+Parmi les champs du formulaire d'inscription se trouve un champs réservé à la date de naissance. L'utilisateur peut remplir celui-ci à l'aide de l'icône de calendrier, cette icône ouvrira un calendrier sur lesquel l'utilisateur pourra choisir une date. L'utilisateur peux également entrer une date de naissance à l'aide du clavier mais celle-ci ne sera accepté uniquement si elle est donnée au format : "jj/mm/aa".
 
 ### Sélection de la difficulté : 
 
-Sur cette page, le joueur peut choisir un mode de jeu (facile, difficile, expert ou chrono).
-Au clique sur un mode, il est alors redirigé sur l'activité de jeu choisie, laquelle est chargée différement en fonction du mode.
-Aussi il peut reprendre une potentielle partie précedente qu'il avait mis en pause.
-Sur cette page, le joueur peut aussi consulter son classement.
+Sur cette page, le joueur peut choisir un mode de jeu (facile, difficile ou expert). Une fois le niveau de difficulté choisi la partie est lancé et le joueur est redirigé sur l'activité de jeu.
+
+#### Reprendre
+Si le joueur possède une sauvegarde associée à son identifiant il lui sera proposé de la reprendre en cliquant sur le bouton "Reprendre". Si une partie est gagné sa sauvegarde est supprimé est il ne sera pas possible de reprendre celle-ci après coup. 
+
+> Note: L'application est exécutée sur l'émulateur d'Android Studio la suppression de la partie ne se fait que de manière locale et la sauvegarde n'est pas supprimé de FireBase. De ce fait le bouton "Reprendre" réapparait si l'on relance l'application. Il est a noté que le `OnSuccessListener` attaché à la méthode `delete()` s'exécute correctement.
 
 ### En Jeu
+Le fonctionnement du jeu est conforme au fonctionnement décrit dans le sujet fourni en début de projet.
 
-__Suivant de mode de jeu séléctionné seul la difficulté augmente__: Dans chaque mode de jeu, la machine montre d'abord la séquence que l'utilisateur devra répeter ensuite.
-Si le joueur commet une erreur, il perd une vie. Lorsque l'utilisateur n'a plus de vie, il perd. 
-Le score du joueur est enregistré lorsqu'il complète un niveau.
-Une fois une partie perdu, une nouvelle recommence.
-En recommençant, le joueur efface le score de la partie précédente mais evidemment pas son meilleur score.
+#### Score et Highscore
+Le score est comparé au highscore quand le joueur gagne la partie, si le score obtenu est plus grand que celui enregistré dans FireBase celui-ci est mis à jour. Le meilleur score n'est pas associé à une sauvegarde mais à un joueur, il est donc complétement indépendants de la sauvegarde actuelle du joueur.
+
+> Si le joueur perd alors qu'il n'a plus de vie son score est remit à zéro.
 
 
