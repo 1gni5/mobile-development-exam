@@ -17,9 +17,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.firestore.core.OrderBy;
 
 import java.util.Locale;
 
@@ -59,7 +61,7 @@ public class LevelSelection extends AppCompatActivity {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    loadGame(2, 2, 0.0, 1.0, 1, 1, 3, 1, false);
+                    loadGame(2, 2, 0.0, 1.0, 1, 1, 10, 1, false);
                 }
             }
         );
@@ -154,7 +156,7 @@ public class LevelSelection extends AppCompatActivity {
                         );
 
                         database.collection("users")
-                                .orderBy("highScore")
+                                .orderBy("highScore", Query.Direction.DESCENDING)
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -162,10 +164,11 @@ public class LevelSelection extends AppCompatActivity {
                                         if (task.isSuccessful()) {
 
                                             int rank = 0;
-                                            double currentRankScore = -1.0;
+                                            double currentRankScore = 9999;
                                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                                if (currentRankScore < document.getDouble("highScore")) {
+                                                if (currentRankScore > document.getDouble("highScore")) {
                                                     rank++;
+                                                    currentRankScore = document.getDouble("highScore");
                                                 }
 
                                                 if(document.getId().equals(currentUser.getUid())){
