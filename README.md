@@ -30,7 +30,7 @@ Sur cette page, le joueur peut choisir un mode de jeu (facile, difficile ou expe
 #### Reprendre
 Si le joueur possède une sauvegarde associée à son identifiant il lui sera proposé de la reprendre en cliquant sur le bouton "Reprendre". Si une partie est gagné sa sauvegarde est supprimé est il ne sera pas possible de reprendre celle-ci après coup. 
 
-> Note: L'application est exécutée sur l'émulateur d'Android Studio la suppression de la partie ne se fait que de manière locale et la sauvegarde n'est pas supprimé de FireBase. De ce fait le bouton "Reprendre" réapparait si l'on relance l'application. Il est a noté que le `OnSuccessListener` attaché à la méthode `delete()` s'exécute correctement.
+> Note: Quand l'application est exécutée sur l'émulateur d'Android Studio la suppression de la partie ne se fait que de manière locale et la sauvegarde n'est pas supprimé de FireBase. De ce fait le bouton "Reprendre" réapparait si l'on relance l'application. Il est a noté que le `OnSuccessListener` attaché à la méthode `delete()` s'exécute correctement.
 
 ### En Jeu
 Le fonctionnement du jeu est conforme au fonctionnement décrit dans le sujet fourni en début de projet.
