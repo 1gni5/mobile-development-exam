@@ -12,7 +12,7 @@ L'application se compose de plusieurs parties:
 ### Acceuil/Connexion
 Sur cette page l'utilisateur peux se connecter à l'aide son _email_ ainsi que de son _mot de passe_.
 
-__Un fois connecté__: il est redirigé vers le menu de choix de difficulté.
+__Une fois connecté__: il est redirigé vers le menu de choix de difficulté.
 
 __Si l'utilisateur n'a pas de compte__: Si l'utilisateur n'a pas de compte il est invité à un créer un en cliquant sur le lien "Pas de compte ? Clique ici !".
 Il sera alors redirigé vers la page d'inscription (Voir __Inscription__).
