@@ -182,6 +182,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/emerald"
         android:onClick="onSignUpClick"
         android:text="@string/register_button"
         app:layout_constraintBottom_toTopOf="@+id/RegisterLinkTextView"
