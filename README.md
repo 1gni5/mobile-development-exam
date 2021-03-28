@@ -40,4 +40,5 @@ Le score est comparé au highscore quand le joueur gagne la partie, si le score 
 
 > Si le joueur perd alors qu'il n'a plus de vie son score est remit à zéro.
 
-
+## Installation
+Le code source est disponible sur [github.com](https://github.com/1gni5/mobile-development-exam), l'APK est également disponible dans l'onglet [releases](https://github.com/1gni5/mobile-development-exam/releases).
